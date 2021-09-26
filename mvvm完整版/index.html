@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>手动实现MVVM</title>
+</head>
+<body>
+    <div id="root">
+        <span>{{id.num}}</span>
+        <span>{{id.name}}</span>
+
+    </div>
+    <script type="module">
+        import MVVM from './mvvm.js';
+
+        let mvvm = new MVVM({
+            el: '#root',
+            data: {
+                id: {
+                    num: 10000
+                }
+            }
+        })
+        console.log(mvvm.id.num);
+        // mvvm.id = 10000;
+    </script>
+</body>
+</html>

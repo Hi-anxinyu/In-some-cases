@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>defineProperty</title>
+</head>
+<body>
+    <div>
+        <p></p>
+        <input type="text">
+    </div>
+    <script>
+        let obj = {
+            id: 1,
+            name: 'obj'
+        };
+        /**
+         * defineProperty用来设置属性修饰符
+         * getOwnPropertyDescriptor用来获取属性修饰符
+         * 数据属性
+         * enumerable  可枚举
+         * configurable  可配置
+         * writable 可修改
+         * value   属性的值
+         * 访问器属性
+         * get(){}
+         * set(){}
+         */
+        Object.defineProperty(obj, 'id', {
+            enumerable: false,  // 是否可以被枚举
+            configurable: true, // 是否可以被修改，是否可以被删除
+            writable: false, // 是否可以被修改
+            value: 'id' // 设置属性的值
+        })
+        console.log(obj, obj.id);
+        obj.id = 1000;
+        console.log(obj, obj.id);
+
+        let properties = Object.getOwnPropertyDescriptor(obj, 'id');
+        console.log('properties...', properties);
+
+
+        function defineReactive(object, key, value){
+            Object.defineProperty(obj, key, {
+                get(){
+                    return 'get.'+value;
+                },
+                set(newValue){
+                    value = 'set.'+newValue;
+                }
+            })
+        }
+        defineReactive(obj, 'name', obj.id);
+        console.log('name...', obj.name);
+        obj.name = 'newObj';
+        console.log('name...', obj.name);
+
+
+        // 实现简易版本的v-model
+        let pEle = document.querySelector('p'),
+            inputEle = document.querySelector('input');
+        var dom = {
+            input: ''
+        };
+        inputEle.addEventListener('input', function(e){
+            dom.input = e.target.value;
+        })
+        Object.defineProperty(dom, 'input', {
+            get(){
+                return inputEle.value;
+            },
+            set(newValue){
+                inputEle.value = newValue;
+                pEle.innerText = newValue;
+            }
+        })
+
+    </script>
+</body>
+</html>
