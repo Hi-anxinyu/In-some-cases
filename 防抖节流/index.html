@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button class="btn">防抖按钮</button>
+    <button class="btn1">节流按钮</button>
+    <script>
+        let btn = document.querySelector('.btn');
+        let btn1 = document.querySelector('.btn1');
+        //封装防抖函数
+        function debounce(fn,delay=500){
+            let timer;
+            return function(){
+                clearTimeout(timer);
+                timer = setTimeout(()=>{
+                    fn(...arguments)
+                },delay)
+            }
+        }
+        function handlerClick(){
+            console.log('点击了按钮');
+        }
+        btn.addEventListener('click',debounce(handlerClick,1000));
+
+        //封装节流函数
+        function throttle(fn,delay=300){
+            let start = + new Date();
+            return function(){
+                let now = + new Date();
+                if(now > start+delay){
+                    fn(...arguments);
+                    start = now;
+                }
+            }
+        }
+        btn1.addEventListener('click',throttle(handlerClick,1000));
+    </script>
+</body>
+</html>
