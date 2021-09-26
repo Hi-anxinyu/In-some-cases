@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>手动实现vue3的reactive,computed和effect</title>
+    <style>
+        span{
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div>
+            <p>所有分类</p>
+            <div id="all">
+            </div>
+        </div>
+        <div>
+            <p>我的分类</p>
+            <div id="favor"></div>
+        </div>
+    </div>
+
+    <script src="./vue3.js"></script>
+    <script>
+        const allElement = document.querySelector('#all'),
+            favorElement = document.querySelector('#favor');
+        const data = reactive({
+            types: ['军事', '体育', '动漫', '财经', '八卦', '教育', '娱乐', '音乐', '视频'].map(item=>{
+                return {
+                    item: item,
+                    favor: false
+                }
+            })
+        })
+
+        const favors = computed(()=>data.types.filter(item=>item.favor));
+
+        allElement.addEventListener('click', function(e){
+            if (e.target.nodeName == 'SPAN'){
+                let textContent = e.target.textContent;
+                let index = data.types.findIndex(item=>{
+                    return item.item === textContent;
+                });
+                let types = [...data.types];
+                if (!types[index].favor){
+                    types[index].favor = true;
+                }
+                data.types = types;
+            }
+        })
+
+        favorElement.addEventListener('click', function(e){
+            if (e.target.nodeName == 'SPAN'){
+                let textContent = e.target.textContent;
+                let index = data.types.findIndex(item=>{
+                    return item.item === textContent;
+                });
+                let types = [...data.types];
+                if (types[index].favor){
+                    types[index].favor = false;
+                }
+                data.types = types;
+            }
+        })
+
+        effect(()=>{
+            // 渲染全部分类
+            let allType = data.types.filter(item=>!item.favor);
+            let fragment = document.createDocumentFragment();
+            for (let i=0;i<allType.length; i++){
+                let child = document.createElement('span');
+                child.textContent = allType[i].item;
+                fragment.appendChild(child);
+            }
+            // 清除全部分类
+            allElement.innerHTML = '';
+            allElement.appendChild(fragment);
+            
+            // 渲染我的分类
+            let favorFragment = document.createDocumentFragment();
+            for (let i=0;i<favors.value.length; i++){
+                let child = document.createElement('span');
+                child.textContent = favors.value[i].item;
+                favorFragment.appendChild(child);
+            }
+            // 清除我的分类
+            favorElement.innerHTML = '';
+            favorElement.appendChild(favorFragment);
+        })
+
+        // effect(()=>{
+        //     console.log('data.types...', data.types);
+        // })
+
+        // setInterval(()=>{
+        //     data.types = [...data.types, {
+        //         item: +new Date(),
+        //         favor: false
+        //     }]
+        // }, 1000);
+    </script>
+</body>
+</html>
