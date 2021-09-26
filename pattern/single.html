@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>单例模式</title>
+</head>
+<body>
+    <script>
+        // 第一种写法，获取实例的时候再判断存不存在
+        // class SingleInstance {
+        //     static instance = null;
+            
+        //     static getInstance(){
+        //         if (SingleInstance.instance == null){
+        //             SingleInstance.instance = new SingleInstance();
+        //         }
+        //         return SingleInstance.instance;
+        //     }
+        // }
+
+        // 第二种写法，直接够静态属性实例化
+        class SingleInstance {
+            static instance = new SingleInstance();
+            
+            static getInstance(){
+                return SingleInstance.instance;
+            }
+        }
+        
+
+        let instance1 = SingleInstance.getInstance();
+        let instance2 = SingleInstance.getInstance();
+        console.log('instance1 === instance2....', instance1 === instance2, instance1);
+    </script>
+</body>
+</html>

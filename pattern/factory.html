@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工厂模式</title>
+</head>
+<body>
+    <script>
+        class Timo{
+            constructor(){
+                this.background = '提莫一般指迅捷斥候。迅捷斥候·提莫，是MOBA竞技网游《英雄联盟》中的英雄角色。他是负责瓦罗兰大陆的班德尔城安全的侦察兵首领，也是班德尔城最富盛名的特种部队之一“主舰斥候队”一员，因为长相可爱深受玩家喜爱，伴随的还有极高的阵亡率，以及成名的.';
+                this.skill = {
+                    passive: '隐形的翅膀',
+                    q: '小莫飞刀',
+                    w: '小莫快跑',
+                    e: '毒性射击',
+                    r: '种蘑菇'
+                }
+            }
+        }
+        class Yasuo{
+            constructor(){
+                this.background = '亚索一般指疾风剑豪。疾风剑豪·亚索，是MOBA竞技网游《英雄联盟》中第117位登场的英雄角色，英雄定位为战士、刺客。亚索是一位近战爆发AD刺客，双突进的技能设置使得他在中单游刃有余，并且大招在队友的配合下，在团战中能够发挥至关重要的作用。';
+                this.skill = {
+                    passive: '浪客之道',
+                    q: '斩钢闪',
+                    w: '风之障壁',
+                    e: '踏前斩',
+                    r: '狂风绝息斩'
+                }
+            }
+        }
+        class Mangsen{
+            constructor(){
+                this.background = '李青，是MOBA竞技网游《英雄联盟》中的英雄角色。李青是一个近战战士型英雄，拥有很高的机动性和爆发力，单挑和小规模团战能力很强，同时李青也是非常优秀的打野英雄，非常擅长野区的遭遇战和Gank，是非常致命的英雄人物。';
+                this.skill = {
+                    passive: '疾风骤雨',
+                    q: '天音波/回音击',
+                    w: '金钟罩/铁布衫',
+                    e: '天雷破/摧筋断骨',
+                    r: '猛龙摆尾'
+                }
+            }
+        }
+        // 英雄工厂类
+        class HeroFactory{
+            constructor(props){
+                if(props.type === 'timo'){
+                    return new Timo();
+                }else if(props.type === 'yasuo'){
+                    return new Yasuo();
+                }else if(props.type === 'mangsen'){
+                    return new Mangsen();
+                }
+            }
+        }
+
+        // 选英雄时
+        let hero1 = new HeroFactory({type: 'timo'});
+        let hero2 = new HeroFactory({type: 'yasuo'});
+        let hero3 = new HeroFactory({type: 'yasuo'});
+        let hero4 = new HeroFactory({type: 'mangsen'});
+        let hero5 = new HeroFactory({type: 'mangsen'});
+        console.log('hero1...', hero1, hero2, hero3, hero4, hero5);
+    </script>
+</body>
+</html>

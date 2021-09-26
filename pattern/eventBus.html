@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发布订阅模式</title>
+</head>
+<body>
+    <script>
+        class EventBus {
+            constructor(){
+                this.listeners = {};
+            }
+            // 订阅方法
+            on(type, listener){
+                if (this.listeners[type]){
+                    this.listeners[type].push(listener);
+                }else{
+                    this.listeners[type] = [listener];
+                }
+            }
+            // 订阅一次
+            once(type, listener){
+                let fn = (...payload)=>{
+                    console.log('payload...', payload);
+                    listener(...payload);
+                    this.off(type, fn);
+                }
+                this.on(type, fn);
+            }   
+            // 发布方法
+            emit(type, payload){
+                let callbacks = this.listeners[type];
+                if (callbacks){
+                    callbacks.forEach(cb=>cb(payload));
+                }
+            }
+            // 取消订阅
+            off(type, listener){
+                let index = this.listeners[type].findIndex(cb => cb===listener);
+                this.listeners[type].splice(index, 1);
+            }
+        }
+
+        let eventBus = new EventBus();
+        eventBus.once('hello', res=>{
+            console.log('res...', res);
+        })
+        setInterval(() => {
+            eventBus.emit('hello', 'world');
+        }, 3000);
+
+        /**
+         * dom三级事件
+         */ 
+        const fn =  res=>{
+            console.log('diyEvent...', res);
+        };
+        // 监听事件 = 订阅三级事件
+        document.addEventListener('diyEvent', fn);
+        document.removeEventListener('diyEvent', fn);
+
+        // 触发事件 = 发布三级事件
+        let event = new Event('diyEvent');
+        document.dispatchEvent(event);
+    </script>
+</body>
+</html>

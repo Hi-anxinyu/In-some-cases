@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>观察者模式</title>
+</head>
+<body>
+    <script>
+        // 被观察者
+        class Object{
+            constructor(state){
+                this.observes = [];
+                this.state = state;
+            }
+            attach(observe){
+                this.observes.push(observe)
+            }
+            setState(state){
+                this.observes.forEach(observe=>observe.update(this.state, state));
+                this.state = state;
+            }
+        }
+        // 观察者
+        class Observe{
+            constructor(name){
+                this.name = name;
+            }
+            update(oldState, newState){
+                console.log(`${this.name}观察到状态改变`, '老的状态', oldState, '新的状态', newState)
+            }
+        }
+
+        let obj = new Object(10);
+        let obs1 = new Observe('observe1');
+        let obs2 = new Observe('observe2');
+        let obs3 = new Observe('observe3');
+
+        obj.attach(obs1);
+        obj.attach(obs2);
+
+        obj.setState(100)
+    </script>
+</body>
+</html>
