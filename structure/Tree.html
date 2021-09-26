@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据结构-二叉树</title>
+    <style>
+        .tree{
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+        .tree>p{
+            width: 100%;
+            text-align: center;
+            padding-bottom: 40px;
+            margin: 0;
+            background-image: url(../assets/both.svg);
+            background-repeat: no-repeat;
+            background-size: 90% 76%;
+            background-position: 46% 85%;
+        }
+        .tree span{
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            border: 1px solid #ccc;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .tree>div{
+            width: 50%;
+        }
+        .no-child>p{
+            background: none;
+        }
+        .right-child{
+            justify-content: flex-end;
+        }
+        .right-child>p{
+            background-image: url('../assets/right.svg');
+            background-size: 210% 76%;
+        }
+        .left-child>p{
+            background-image: url('../assets/left.svg');
+            background-size: 210% 76%;
+            background-position: 58% 85%;
+        }
+        .add{
+            animation: addFrame 1.5s linear;
+        }
+        @keyframes addFrame{
+            0%{
+                background: green;
+            }
+            100%{
+                background: transparent;
+            }
+        }
+        .delete{
+            animation: deleteFrame 1.5s linear;
+        }
+        @keyframes deleteFrame{
+            0%{
+                background: red;
+            }
+            100%{
+                background: transparent;
+            }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        class Queue{
+            constructor(){
+                this.data = [];
+            }
+            enqueue(item){
+                this.data.push(item);
+            }
+            dequeue(){
+                return this.data.shift();
+            }
+            pick(){
+                return this.data[0];
+            }
+            clear(){
+                this.data = [];
+            }
+            length(){
+                return this.data.length;
+            }
+        }
+        class Stack{
+            constructor(){
+                this.data = [];
+            }
+            push(item){
+                this.data.push(item)
+            }
+            pop(){
+                return this.data.pop();
+            }
+            pick(){
+                return this.data[this.data.length-1];
+            }
+            length(){
+                return this.data.length;
+            }
+            clear(){
+                this.data = [];
+            }
+        }
+        class TreeNode{
+            constructor(element){
+                this.element = element;
+                // 左节点，连接比自己小的数据
+                this.left = null;
+                // 有节点，连接比自己大大数据
+                this.right = null;
+            }
+        }
+        /**
+         * 树的遍历
+         * 1. 先序遍历 根->left->right
+         * 2. 中序遍历 left->根->right
+         * 3. 后续遍历 left->right->根
+         */ 
+        class BinarySearchTree{
+            constructor(){
+                this.root = null;
+            }
+            add(element){
+                let node = new TreeNode(element);
+                let parentNode = this.root;
+                if (this.root === null){
+                    this.root = node;
+                }else{
+                    while(true){
+                        if (element < parentNode.element){
+                            if(parentNode.left === null){
+                                parentNode.left = node;
+                                break;
+                            }else{
+                                parentNode = parentNode.left;
+                            }
+                        }else{
+                            if (parentNode.right === null){
+                                parentNode.right = node;
+                                break;
+                            }else{
+                                parentNode = parentNode.right;
+                            }
+                        }
+                    }
+                }
+            }
+            // 先序遍历
+            preOrderTraverse(node){
+                if (node === null){
+                    return;
+                }
+                console.log('node...', node.element);
+                this.preOrderTraverse(node.left);
+                this.preOrderTraverse(node.right);
+            }
+            // 中序遍历
+            inOrdeTranverse(node){
+                if (node === null){
+                    return;
+                }
+                this.inOrdeTranverse(node.left);
+                console.log('node...', node.element);
+                this.inOrdeTranverse(node.right);
+            }
+            // 后序遍历
+            postOrderTraverse(node){
+                if (node === null){
+                    return;
+                }
+                this.postOrderTraverse(node.left);
+                this.postOrderTraverse(node.right);
+                console.log('node...', node.element);
+            }
+            // 深度优先遍历
+            depthFirstSearch(node){
+                let stack = new Stack();
+                stack.push(node);
+                while(stack.length()){
+                    let node = stack.pop();
+                    console.log('node...', node.element);
+                    if (node.right){
+                        stack.push(node.right)
+                    }
+                    if (node.left){
+                        stack.push(node.left);
+                    }
+                }
+            }
+            // 广度优先遍历
+            breadthFirstSearch(node){
+                let queue = new Queue();
+                queue.enqueue(node);
+                while(queue.length()){
+                    let node = queue.dequeue();
+                    console.log('node...', node.element);
+                    if (node.left){
+                        queue.enqueue(node.left);
+                    }
+                    if (node.right){
+                        queue.enqueue(node.right);
+                    }
+                }
+            }
+            // 把树转化成dom
+            tree2html(node){
+                if (node){
+                    let cls = '';
+                    if (node.left && node.right){
+                        cls = 'both-child'
+                    }else if(node.left && !node.right){
+                        cls = 'left-child'
+                    }else if(!node.left && node.right){
+                        cls = 'right-child'
+                    }else{
+                        cls = 'no-child'
+                    }
+                    return `<div class="tree ${cls}">
+                        <p><span class=${node.element===addElement?'add': node.element===deleteElement?'delete':''}>${node.element}</span></p>
+                        ${this.tree2html(node.left)}
+                        ${this.tree2html(node.right)}
+                    </div>`;
+                }else{
+                    return '';
+                }
+            }
+            // 找到最大节点
+            getMaxNode(node){
+                while(node.right){
+                    node = node.right;
+                }
+                return node;
+            }
+            // 找到最小节点
+            getMinNode(node){
+                while(node.left){
+                    node = node.left;
+                }
+                return node;
+            }
+            // 查找节点
+            find(node, element){
+                if (node === null){
+                    return false;
+                }else{
+                    if (node.element === element){
+                        return node;
+                    }else if(element < node.element){
+                        return this.find(node.left, element);
+                    }else{
+                        return this.find(node.right, element);
+                    }
+                }
+            }
+            // 获取节点个数
+            length(node){
+                if (node === null){
+                    return 0;
+                }else{
+                    return 1 + this.length(node.left) + this.length(node.right);
+                }
+            }
+            // 获取节点最大深度
+            getMaxDepth(node){
+                if (node === null){
+                    return 0;
+                }else{
+                    let lDepth = this.getMaxDepth(node.left);
+                    let rDepth = this.getMaxDepth(node.right);
+                    return lDepth>rDepth? lDepth+1: rDepth+1;
+                }
+            }
+            // 删除节点
+            delete(element){
+                this.root = this.deleteFromNode(this.root, element);
+            }
+            // 从给定节点范围中删除节点
+            deleteFromNode(node, element){
+                if (element < node.element){
+                    node.left = this.deleteFromNode(node.left, element);
+                    return node;
+                }else if (element > node.element){
+                    node.right = this.deleteFromNode(node.right, element);
+                }else{
+                    if (!node.left && !node.right){
+                        // 1.当是叶子节点
+                        return null;
+                    }else if(node.left && !node.right){
+                        // 2. 只有左节点
+                        return node.left
+                    }else if(node.right && !node.left){
+                        // 3. 只有右节点
+                        return node.right
+                    }else{
+                        // 4. 左右节点，找左子树中最大的节点或右子树中最小的节点作为后继节点
+                        let newNode = this.getMinNode(node.right);
+                        node.element = newNode.element;
+                        node.right = this.deleteFromNode(node.right, node.element);
+                        return node;
+                    }
+                }
+            }
+        }
+        let bst = new BinarySearchTree();
+        bst.add(100);
+        bst.add(80);
+        bst.add(60);
+        bst.add(82);
+        bst.add(83);
+        bst.add(110);
+        bst.add(105);
+        bst.add(50);
+        bst.add(108);
+        bst.add(20);
+        bst.inOrdeTranverse(bst.root);
+        console.log('--------------')
+        bst.preOrderTraverse(bst.root);
+        console.log('--------------')
+        bst.postOrderTraverse(bst.root);
+        console.log('--------------')
+        bst.depthFirstSearch(bst.root);
+        console.log('--------------')
+        bst.breadthFirstSearch(bst.root);
+
+        //  把二叉树转成dom节点
+        let html = bst.tree2html(bst.root);
+        document.body.innerHTML = html;
+
+        // 找到最大节点
+        let max = bst.getMaxNode(bst.root.left);
+        console.log('max...', max);
+
+        // 找到最小节点
+        let min = bst.getMinNode(bst.root.right);
+        console.log('min...', min);
+
+        // 查找节点
+        let find = bst.find(bst.root, 111);
+        console.log('find...', find);
+
+        // 获取节点个数
+        let length = bst.length(bst.root);
+        console.log('length...', length);
+
+        // 获取最大深度
+        let depth = bst.getMaxDepth(bst.root);
+        console.log('depth...', depth);
+
+        var addElement, deleteElement;
+        // 测试
+        for (let i=1;i<100;i++){
+            setTimeout(() => {
+            
+                addElement = Math.floor(Math.random()*1000);
+                while(bst.find(bst.root, addElement)){
+                    addElement = Math.floor(Math.random()*1000);
+                }
+                // 添加一个节点
+                bst.add(addElement)
+                deleteElement = bst.getMinNode(bst.root).element;
+                //  把二叉树转成dom节点
+                let html = bst.tree2html(bst.root);
+                document.body.innerHTML = html;
+                setTimeout(() => {
+                    addElement = NaN;
+                    // 删除一个节点
+                    bst.delete(deleteElement);
+                    //  把二叉树转成dom节点
+                    let html = bst.tree2html(bst.root);
+                    document.body.innerHTML = html;
+                }, 1500)
+               
+            }, 3000*i);
+            
+        }
+    </script>
+</body>
+</html>

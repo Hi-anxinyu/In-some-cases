@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据结构-栈</title>
+</head>
+<body>
+    <script>
+        class Stack{
+            constructor(){
+                this.data = [];
+            }
+            push(item){
+                this.data.push(item)
+            }
+            pop(){
+                this.data.pop();
+            }
+            pick(){
+                return this.data[this.data.length-1];
+            }
+            length(){
+                return this.data.length;
+            }
+            clear(){
+                this.data = [];
+            }
+        }
+        // 进制的转化 10->2, n是10进制的数，m是进制
+        function transform(n, m){
+            let stack = new Stack();
+            while(n >= m){
+                let remainder = n%m;
+                stack.push(remainder);
+                n = Math.floor(n/m);
+            }
+            stack.push(n);
+            let str = '';
+            while(stack.length()){
+                str += stack.pick();
+                stack.pop();
+            }
+            return str;
+        }
+        let result = transform(100, 3);
+        console.log('result...', result);
+    </script>
+</body>
+</html>

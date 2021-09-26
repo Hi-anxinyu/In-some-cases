@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据结构-图</title>
+</head>
+<body>
+    <script>
+        // 图
+        class Graph{
+            constructor(){
+                // 存储顶点
+                this.vertices = [];
+                // 存储边
+                this.edges = [];
+            }
+            addVertex(vertex){
+                this.vertices.push(vertex);
+            }
+            addEdge(from, to){
+                // 把边存储到from的邻接表中
+                if (this.edges[from]){
+                    this.edges[from].push(to);
+                }else{
+                    this.edges[from] = [to];
+                }
+                // 把边存储到to到邻接表中
+                if (this.edges[to]){
+                    this.edges[to].push(from);
+                }else{
+                    this.edges[to] = [from];
+                }
+            }
+            breadthFirstSearch(){
+                for (let i=0;i<this.vertices.length;i++){
+                    let str = `顶点是${this.vertices[i]}的边：`;
+                    this.edges[this.vertices[i]].forEach(item=>{
+                        str += `${this.vertices[i]}——${item}  `;
+                    })
+                    console.log(str);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

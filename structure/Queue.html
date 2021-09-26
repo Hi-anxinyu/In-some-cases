@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据结构-队列</title>
+</head>
+<body>
+    <script>
+        class Queue{
+            constructor(){
+                this.data = [];
+            }
+            enqueue(item){
+                this.data.push(item);
+            }
+            dequeue(){
+                return this.data.shift();
+            }
+            pick(){
+                return this.data[0];
+            }
+            clear(){
+                this.data = [];
+            }
+            length(){
+                return this.data.length;
+            }
+        }
+        // 击鼓传花
+        let queue = new Queue();
+        let n = Math.floor(Math.random()*100);
+        let flower = m = Math.floor(Math.random()*150);
+        for (let i=1;i<=n;i++){
+            queue.enqueue(i);
+        }
+        let str = 'start';
+        while(--m){
+            let i = queue.dequeue();
+            str += `->${i}`;
+            queue.enqueue(i)
+        }
+        str += '->end';
+        let result = queue.pick();
+        console.log('队列长度...', n, '击鼓传花次数...', flower, '接花的人...', result);
+        console.log('传花的结果:', str);
+    </script>
+</body>
+</html>

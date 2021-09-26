@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>链表结构-双向链表</title>
+  </head>
+  <body>
+    <script>
+      class Node {
+        constructor(element) {
+          this.element = element;
+          this.next = null;
+          this.prev = null;
+        }
+      }
+      class DoubleLink {
+        constructor() {
+          this.head = null;
+          this.currentNode = null;
+        }
+        add(element) {
+          let node = new Node(element);
+          if (this.head === null) {
+            this.head = this.currentNode = node;
+          } else {
+            // 前一个节点的next指向后一个节点
+            this.currentNode.next = node;
+            // 后一个节点的prev指向前一个节点
+            node.prev = this.currentNode;
+            // currentNode指向新的节点
+            this.currentNode = node;
+          }
+        }
+        display() {
+            let str = 'head',
+                currentNode = this.head;
+            while(currentNode){
+                str += `->${currentNode.element}`;
+                currentNode = currentNode.next;
+            }
+            console.log('display str...', str);
+        }
+        displayReverse() {
+            let str = 'end',
+                currentNode = this.currentNode;
+            while(currentNode){
+                str += `->${currentNode.element}`;
+                currentNode = currentNode.prev;
+            }
+            console.log('display reverse str...', str);
+        }
+        size(){
+            let n=0,
+                currentNode = this.head;
+            while(currentNode){
+                n++;
+                currentNode = currentNode.next;
+            }
+            return n;
+        }
+        findPrev(element){
+            let currentNode = this.head;
+            while(currentNode.next){
+                if (currentNode.next.element === element){
+                    return currentNode;
+                }
+                currentNode = currentNode.next;
+            }
+        }
+        find(element){
+            let currentNode = this.head;
+            while(currentNode){
+                if (currentNode.element === element){
+                    return currentNode;
+                }
+                currentNode = currentNode.next;
+            }
+        }
+        update(element, newElement){
+            let node = this.find(element);
+            node.element = newElement;
+        }
+        remove(element){
+            let node = this.find(element);
+            if (node === this.head){
+                this.head = node.next;
+                node.prev = null;
+            }else if(node === this.currentNode){
+                this.currentNode = node.prev;
+                node.prev.next = null;
+            }else{
+                node.prev.next = node.next;
+                node.next.prev = node.prev;
+            }
+        }
+        insert(element, nodeElement){
+            let pre = this.findPrev(nodeElement),
+                node = new Node(element);
+            node.next = pre.next;
+            pre.next = node;
+            node.prev = pre;
+            node.next.prev = node;
+        }
+      }
+
+      let link = new DoubleLink();
+      for (let i=1;i<=100;i++){
+          link.add(i);
+      }
+      link.display();
+      link.displayReverse();
+      let size = link.size();
+      console.log('size...', size);
+      let result = link.find(99);
+      console.log('result...', result);
+      link.remove(1);
+      link.remove(50);
+      link.remove(100);
+      link.display();
+    </script>
+  </body>
+</html>

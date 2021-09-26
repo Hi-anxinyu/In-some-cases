@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>链表结构-单向链表</title>
+</head>
+<body>
+    <script>
+        class Node{
+            constructor(element){
+                // 存储该节点的值
+                this.element = element;
+                // 指向下一个节点
+                this.next = null;
+            }
+        }
+        class LinearList{
+            constructor(){
+                // 首节点，永远指向定一个节点
+                this.head = new Node('head');
+                // 链表当前节点
+                this.currentNode = this.head;
+                // 链接前进节点
+                this.addvanceNode = this.head;
+            }
+            // 尾部添加
+            add(element){
+                let node = new Node(element);
+                // this.currentNode = this.currentNode.next = node;
+                // 就此节点挂载到当前节点的下一个节点
+                this.currentNode.next = node;
+                // 就当前节点指向此节点
+                this.currentNode = node;
+            }
+            // 节点前插入
+            insert(element, nodeElement){
+                let currentNode = this.findPrvNode(nodeElement);
+                let node = new Node(element);
+                node.next = currentNode.next;
+                currentNode.next = node;
+            }
+            // 节点删除
+            remove(element){
+                debugger;
+                // 查找前一个节点
+                let preNode = this.findPrvNode(element);
+                // 查找当前节点
+                let currentNode = this.findNode(element);
+                if (currentNode === this.currentNode){
+                    // 判断要删除的节点是否是尾节点
+                    this.currentNode = preNode;
+                    preNode.next = null;
+                }else if(currentNode === this.head){
+                    // 判断要删除的节点是否是头节点
+                    this.head = currentNode.next;
+                }else{
+                    preNode.next = currentNode.next;
+                }
+            }
+            // 查找前一个节点
+            findPrvNode(element){
+                let currentNode = this.head;
+                while(currentNode.next !== null){
+                    if (currentNode.next.element === element){
+                        return currentNode;
+                    }else{
+                        currentNode = currentNode.next;
+                    }
+                }
+            }
+            // 查找当前节点
+            findNode(element){
+                let currentNode = this.head;
+                while(currentNode){
+                    if (currentNode.element === element){
+                        return currentNode;
+                    }else{
+                        currentNode = currentNode.next;
+                    }
+                }
+            }
+            // 链表遍历
+            display(element){
+                // 1->3->5->2->4
+                let currentNode = this.head;
+                let str = '';
+                while(currentNode && currentNode.next){
+                    str += `${currentNode.element}->`;
+                    currentNode = currentNode.next;
+                }
+                str += `${currentNode.element}`;
+                console.log('list...', str)
+            }
+            // 获取链表长度
+            size(){
+                let currentNode = this.head;
+                let n = 0;
+                while(currentNode){
+                    n++;
+                    currentNode = currentNode.next;
+                }
+                return n;
+            }
+            // 从给定节点，前进n个节点
+            advance(n){
+                while(n--){
+                    if (this.addvanceNode.next === null){
+                        this.addvanceNode = this.head;
+                    }else{
+                        this.addvanceNode = this.addvanceNode.next;
+                    }
+                }
+                return this.addvanceNode;
+            }
+        }
+
+        let linear = new LinearList();
+        // 插入100个数
+        // for (let i=0;i<100;i++){
+        //     linear.add(i);
+        // }
+        // linear.display();
+        // linear.insert(49, 50);
+        // linear.insert(51, 50);
+        // linear.display();
+        // linear.remove(87);
+        // linear.display();
+        // linear.remove(99);
+        // linear.display();
+        // linear.remove('head');
+        // linear.display();
+        // let size = linear.size();
+        // console.log('链表长度...', size);
+
+        /**
+         *  约瑟夫环
+         * 我们这个规则是这么定的：
+        在一间房间总共有n个人（下标0～n-1），只能有最后一个人活命。
+        按照如下规则去排除人：
+            所有人围成一圈
+            顺时针报数，每次报到q的人将被排除掉
+            被排除掉的人将从房间内被移走
+            然后从被kill掉的下一个人重新报数，继续报q，再清除，直到剩余一人
+        */
+        let ysf = new LinearList();
+        let n = Math.floor(Math.random() * 3) + 30,
+            q = Math.floor(Math.random() * 2) + 3;
+        for (let i = 1; i <= n; i++){
+            ysf.add(i);
+        }
+
+        ysf.remove('head');
+
+        console.log('人数...', n, '报数...', q);
+        // 第一次打印
+        ysf.display();
+        let dead = '死亡顺序';
+        while(ysf.size() > 2){
+            let node = ysf.advance(q);
+            dead += `->${node.element}`;
+            ysf.remove(node.element);
+        }
+        console.log('dead...', dead);
+        ysf.display();
+    </script>
+</body>
+</html>
