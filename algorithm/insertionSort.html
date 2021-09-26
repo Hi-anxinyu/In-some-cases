@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>插入排序</title>
+</head>
+<body>
+    <script>
+        const arr = [];
+        for (let i = 1; i <= 100; i++) {
+            arr.push(i);
+        }
+        arr.sort((a, b) => Math.random() - .5);
+        console.log('arr...', arr);
+      
+        function insertionSort(arr){
+            let current = 0, preIndex = 0;
+           for (let i = 1; i < arr.length; i++){
+                preIndex = i-1;
+                current = arr[i];
+                while(preIndex>=0 && arr[preIndex] > current){
+                    arr[preIndex+1] = arr[preIndex]
+                    preIndex--;
+                }
+                arr[preIndex+1] = current;
+           }
+        }
+        insertionSort(arr);
+
+        console.log('arr...', arr);
+    </script>
+</body>
+</html>

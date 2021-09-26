@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>排序-动画</title>
+    <style>
+        #container {
+            position: relative;
+            height: 300px;
+        }
+        span{
+            display: inline-block;
+            position: absolute;
+            width: 50px;
+            bottom: 0;
+            background: lightblue;
+            text-align: center;
+            transition: all .5s ease;
+        }
+        .active{
+            background: green;
+        }
+        .finish{
+            background: orange;
+        }
+        .candidate{
+            background: blue;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="container">
+
+    </div>
+    <script>
+        function randomData(n = 10){
+            let arr = [];
+            for (let i=10;i<200;i++){
+                arr.push(i);
+            }
+            return arr.sort((a, b)=>Math.random()-.5).slice(0, n);
+        }
+        function data2Dom(arr){
+            let container = document.getElementById('container');
+            arr.forEach((item, index)=>{
+                let span =document.createElement('span');
+                span.style.height = item+10+'px';
+                span.style.left = index*60+'px';
+                span.innerText = item;
+                container.appendChild(span);
+            })
+        }
+        function sleep(n = 1000){
+            return new Promise((resolve, reject)=>{
+                setTimeout(() => {
+                    resolve();
+                }, n)
+            })
+        }
+        // 冒泡排序
+        async function bubbleSort(arr){
+            let elements = [...document.querySelectorAll('#container span')];
+            for (let i=0;i<arr.length; i++){
+                for (let j=0;j<arr.length-i-1;j++){
+                    // 给j和j+1加动画颜色
+                    elements[j].className = 'active';
+                    elements[j+1].className = 'active';
+                    await sleep(500);
+                    if (arr[j] > arr[j+1]){
+                        [arr[j], arr[j+1]] = [arr[j+1], arr[j]];
+                        [elements[j], elements[j+1]] = [elements[j+1], elements[j]];
+                        [elements[j].style.left, elements[j+1].style.left] = [elements[j+1].style.left, elements[j].style.left];
+                    }
+                    await sleep(500);
+                    elements[j].className = '';
+                }
+                elements[arr.length-i-1].className = 'finish'
+                await sleep(500);
+            }
+        }
+
+        // 选择排序
+        async function selectionSort(arr){
+            let elements = [...document.querySelectorAll('#container span')];
+            for (let i=0;i<arr.length; i++){
+                let minIndex = i;
+                elements[i].className = 'active';
+                for (let j=i+1;j<arr.length;j++){
+                    elements[j].className = 'active';
+                    if (arr[j] < arr[minIndex]){
+                        await sleep(500);
+                        elements[minIndex].className = '';
+                        minIndex = j;
+                        elements[j].className = 'candidate';
+                    }else{
+                        await sleep(500);
+                        elements[j].className = '';
+                    }
+                }
+                [arr[i], arr[minIndex]] = [arr[minIndex], arr[i]];
+                [elements[i], elements[minIndex]] = [elements[minIndex], elements[i]];
+                [elements[i].style.left, elements[minIndex].style.left] = [elements[minIndex].style.left, elements[i].style.left];
+                await sleep(500);
+                elements[i].className = 'finish'
+                await sleep(500);
+            }
+        }
+
+        // 插入排序
+        async function insertionSort(arr){
+            let elements = [...document.querySelectorAll('#container span')];
+            for (let i = 1;i<arr.length; i++){
+                let preIndex = i-1;
+                let current = arr[i];
+                let currentElement = elements[i];
+                currentElement.className = 'active';
+                currentElement.style.bottom = -300+'px';
+                await sleep(500);
+                elements[preIndex].className = 'active';
+                await sleep(500);
+                while(preIndex>=0 && arr[preIndex]>current){
+                    elements[preIndex].className = 'active';
+                    await sleep(500);
+                    elements[preIndex+1] = elements[preIndex];
+                    // 交换两个距离左边的距离
+                    [currentElement.style.left, elements[preIndex].style.left] = [elements[preIndex].style.left, currentElement.style.left];
+                    await sleep(500);
+                    elements[preIndex].className = '';
+                    
+                    arr[preIndex+1] = arr[preIndex];
+                    preIndex--;
+                }
+                arr[preIndex+1] = current;
+                currentElement.style.bottom = 0+'px';
+                currentElement.className = ' finish';
+                // 交换dom
+                elements[preIndex+1] = currentElement;
+            }
+        }
+        // 1. 生成随机数组
+        let arr = randomData();
+        // 2. 把数组转化成dom
+        data2Dom(arr);
+        // 3. 调用冒泡排序
+        // bubbleSort(arr);
+        // 4. 调用选择排序
+        // selectionSort(arr)
+        // 5. 调用插入排序
+        insertionSort(arr)
+    </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>选择排序</title>
+</head>
+
+<body>
+    <script>
+        const arr = [];
+        for (let i = 1; i <= 100; i++) {
+            arr.push(i);
+        }
+        arr.sort((a, b) => Math.random() - .5);
+        console.log('arr...', arr);
+      
+        function selectionSort(arr){
+            var minIndex = 0;
+            for (let i = 0; i < arr.length; i++){
+                minIndex = i;
+                for (let j=i+1; j<arr.length; j++){
+                    if (arr[j] < arr[minIndex]){
+                        minIndex = j;
+                    }
+                }
+                [arr[minIndex], arr[i]] = [arr[i], arr[minIndex]];
+            }
+            return arr;
+        }
+        selectionSort(arr);
+
+        console.log('arr...', arr);
+    </script>
+</body>
+
+</html>
